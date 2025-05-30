@@ -1,0 +1,226 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tu API RESTful (Solo GET)",
+    "version": "1.0.0",
+    "description": "Documentación del método GET para el recurso de servicios."
+  },
+  "servers": [
+    {
+      "url": "http://localhost/12.back.ev3/api",
+      "description": "Servidor de desarrollo"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/products-services": {
+      "get": {
+        "summary": "Obtiene la lista de todos los servicios.",
+        "description": "Retorna un array de objetos de servicio. Esta operación está sujeta a limitaciones de tasa.",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa.",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "schema": {
+                  "type": "integer",
+                  "description": "El límite de peticiones por hora."
+                },
+                "example": 100
+              },
+              "X-RateLimit-Remaining": {
+                "schema": {
+                  "type": "integer",
+                  "description": "El número de peticiones restantes en la hora actual."
+                },
+                "example": 95
+              },
+              "X-RateLimit-Reset": {
+                "schema": {
+                  "type": "integer",
+                  "description": "El timestamp Unix en el que el límite de peticiones se reiniciará."
+                },
+                "example": 1653571200
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "description": "Directivas de control de caché."
+                },
+                "example": "public, max-age=3600"
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "description": "Etiqueta de entidad para la validación de caché."
+                },
+                "example": "W/\"abcdef12345\""
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Servicio"
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "nombre": "Consultoría Inicial",
+                    "descripcion": "Evaluación inicial de las necesidades del cliente."
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Desarrollo de Estrategia",
+                    "descripcion": "Creación de un plan estratégico personalizado."
+                  }
+                ]
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "mensaje": "Error al conectar con la base de datos."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "summary": "Obtiene un servicio por su ID.",
+        "description": "Retorna los detalles de un servicio específico. Esta operación puede utilizar caché.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID del servicio a obtener.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Servicio encontrado.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "description": "Directivas de control de caché."
+                },
+                "example": "public, max-age=60"
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "description": "Etiqueta de entidad para la validación de caché."
+                },
+                "example": "W/\"zyxw98765\""
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Servicio"
+                },
+                "example": {
+                  "id": 1,
+                  "nombre": "Consultoría Inicial",
+                  "descripcion": "Evaluación inicial de las necesidades del cliente."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Servicio no encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "mensaje": "Servicio no encontrado."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "mensaje": "Error al obtener el servicio."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Servicio": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID único del servicio.",
+            "readOnly": true
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre del servicio."
+          },
+          "descripcion": {
+            "type": "string",
+            "description": "Descripción del servicio."
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "descripcion"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje de error."
+          }
+        },
+        "required": [
+          "mensaje"
+        ]
+      }
+    }
+  }
+}
