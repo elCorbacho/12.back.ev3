@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Configuración de rutas base
 $localBase = '/12.back.ev3/api';
-$remoteBase = 'https://www.clinicatecnologica.cl/ipss/tejelanasVivi/api/v1/';
+$remoteBase = 'https://www.clinicatecnologica.cl/ipss/tejelanasVivi/api/v1';
 
 // Obtener la ruta solicitada
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

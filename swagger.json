@@ -100,62 +100,22 @@
         }
       }
     },
-    "/{id}": {
+    "/about-us": {
       "get": {
-        "summary": "Obtiene un servicio por su ID.",
-        "description": "Retorna los detalles de un servicio específico. Esta operación puede utilizar caché.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "ID del servicio a obtener.",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
+        "summary": "Información sobre la empresa",
+        "description": "Retorna información general sobre la empresa o el sitio.",
         "responses": {
           "200": {
-            "description": "Servicio encontrado.",
-            "headers": {
-              "Cache-Control": {
-                "schema": {
-                  "type": "string",
-                  "description": "Directivas de control de caché."
-                },
-                "example": "public, max-age=60"
-              },
-              "ETag": {
-                "schema": {
-                  "type": "string",
-                  "description": "Etiqueta de entidad para la validación de caché."
-                },
-                "example": "W/\"zyxw98765\""
-              }
-            },
+            "description": "Operación exitosa.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Servicio"
+                  "$ref": "#/components/schemas/AboutUs"
                 },
                 "example": {
-                  "id": 1,
-                  "nombre": "Consultoría Inicial",
-                  "descripcion": "Evaluación inicial de las necesidades del cliente."
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Servicio no encontrado.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "mensaje": "Servicio no encontrado."
+                  "titulo": "Sobre Nosotros",
+                  "descripcion": "Somos una empresa dedicada a la venta de productos y servicios artesanales.",
+                  "contacto": "contacto@ejemplo.com"
                 }
               }
             }
@@ -168,7 +128,7 @@
                   "$ref": "#/components/schemas/Error"
                 },
                 "example": {
-                  "mensaje": "Error al obtener el servicio."
+                  "mensaje": "Error al obtener la información."
                 }
               }
             }
@@ -176,7 +136,11 @@
         }
       }
     }
+    
   },
+
+  
+  
   "components": {
     "securitySchemes": {
       "bearerAuth": {
@@ -220,6 +184,23 @@
         "required": [
           "mensaje"
         ]
+      },
+      "AboutUs": {
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "description": "Título de la sección."
+          },
+          "descripcion": {
+            "type": "string",
+            "description": "Descripción general."
+          },
+          "contacto": {
+            "type": "string",
+            "description": "Correo de contacto."
+          }
+        }
       }
     }
   }
