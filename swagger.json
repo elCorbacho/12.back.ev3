@@ -9,13 +9,17 @@
     {
       "url": "http://localhost/12.back.ev3/api",
       "description": "Servidor de desarrollo"
-    }
+      }
   ],
   "security": [
     {
       "bearerAuth": []
     }
   ],
+
+
+
+
   "paths": {
     "/products-services": {
       "get": {
@@ -73,12 +77,20 @@
                   {
                     "id": 1,
                     "nombre": "Consultoría Inicial",
-                    "descripcion": "Evaluación inicial de las necesidades del cliente."
+                    "descripcion": "Evaluación inicial de las necesidades del cliente.",
+                    "tallas": "S, M, L",
+                    "colores": "Rojo, Azul, Verde",
+                    "precio": 100.00,
+                    "imgs": "https://example.com/img1.jpg"
                   },
                   {
                     "id": 2,
-                    "nombre": "Desarrollo de Estrategia",
-                    "descripcion": "Creación de un plan estratégico personalizado."
+                    "nombre": "Desarrollo de Proyecto",
+                    "descripcion": "Desarrollo completo del proyecto según las especificaciones del cliente.",
+                    "tallas": "S, M, L",
+                    "colores": "Rojo, Azul, Verde",
+                    "precio": 500.00,
+                    "imgs": "https://example.com/img2.jpg"
                   }
                 ]
               }
@@ -100,6 +112,12 @@
         }
       }
     },
+
+
+
+
+
+    
     "/about-us": {
       "get": {
         "summary": "Información sobre la empresa",
@@ -113,9 +131,7 @@
                   "$ref": "#/components/schemas/AboutUs"
                 },
                 "example": {
-                  "titulo": "Sobre Nosotros",
-                  "descripcion": "Somos una empresa dedicada a la venta de productos y servicios artesanales.",
-                  "contacto": "contacto@ejemplo.com"
+                      "data": "\"Tejelanas Vivi\" es un proyecto que celebra la belleza y la versatilidad de las fibras naturales. Inspirados en la naturaleza, creamos piezas tejidas a mano que conectan con la tierra y con quienes las usan. A través de técnicas ancestrales como el telar y el crochet, transformamos fibras naturales en productos textiles únicos y sostenibles, promoviendo un consumo consciente y respetuoso con el medio ambiente."
                 }
               }
             }
@@ -135,73 +151,165 @@
           }
         }
       }
-    }
-    
-  },
-
-  
-  
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
     },
-    "schemas": {
-      "Servicio": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "ID único del servicio.",
-            "readOnly": true
+
+
+
+
+
+
+        "/faq": {
+      "get": {
+        "summary": "Información sobre preguntas frecuentes",
+        "description": "Retorna información general sobre las preguntas frecuentes.",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FaqItem"
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "titulo": "¿Cómo comprar productos?",
+                    "respuesta": "Puedes comprar productos a través de nuestra tienda online o contactándonos directamente.",
+                    "activo": true
+                  },
+                  {
+                    "id": 5,
+                    "titulo": "¿Tiene donde recibir un mensaje por whatsapp?",
+                    "respuesta": "Si, me puede escribir al número: +56 9 7632 2314.",
+                    "activo": true
+                  }
+                ]
+              }
+            }
           },
-          "nombre": {
-            "type": "string",
-            "description": "Nombre del servicio."
-          },
-          "descripcion": {
-            "type": "string",
-            "description": "Descripción del servicio."
-          }
-        },
-        "required": [
-          "id",
-          "nombre",
-          "descripcion"
-        ]
-      },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "mensaje": {
-            "type": "string",
-            "description": "Mensaje de error."
-          }
-        },
-        "required": [
-          "mensaje"
-        ]
-      },
-      "AboutUs": {
-        "type": "object",
-        "properties": {
-          "titulo": {
-            "type": "string",
-            "description": "Título de la sección."
-          },
-          "descripcion": {
-            "type": "string",
-            "description": "Descripción general."
-          },
-          "contacto": {
-            "type": "string",
-            "description": "Correo de contacto."
+          "500": {
+            "description": "Error interno del servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "mensaje": "Error al obtener la información."
+                }
+              }
+            }
           }
         }
       }
     }
+  },
+
+
+"components": {
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  },
+  "schemas": {
+    "Servicio": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID único del servicio.",
+          "readOnly": true
+        },
+        "nombre": {
+          "type": "string",
+          "description": "Nombre del servicio."
+        },
+        "descripcion": {
+          "type": "string",
+          "description": "Descripción del servicio."
+        },
+        "tallas": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tallas disponibles."
+        },
+        "colores": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Colores disponibles."
+        },
+        "precio": {
+          "type": "number",
+          "format": "float",
+          "description": "Precio del servicio o producto."
+        },
+        "imgs": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" },
+          "description": "URLs de imágenes."
+        }
+      },
+      "required": [
+        "id",
+        "nombre",
+        "descripcion"
+      ]
+    },
+    "AboutUs": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "description": "Descripción de la empresa."
+        }
+      },
+      "required": ["data"]
+    },
+
+
+    
+    "FaqItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID de la pregunta frecuente."
+        },
+        "titulo": {
+          "type": "string",
+          "description": "Título de la pregunta."
+        },
+        "respuesta": {
+          "type": "string",
+          "description": "Respuesta a la pregunta."
+        },
+        "activo": {
+          "type": "boolean",
+          "description": "Indica si la pregunta está activa."
+        }
+      },
+      "required": ["id", "titulo", "respuesta", "activo"]
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "mensaje": {
+          "type": "string",
+          "description": "Mensaje de error."
+        }
+      },
+      "required": [
+        "mensaje"
+      ]
+    }
   }
 }
+}
+
+

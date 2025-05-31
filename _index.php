@@ -5,25 +5,20 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With");
 
 // Responder a preflight (OPTIONS)
-//consiste en verificar si la solicitud es de tipo OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
 // Configuración de rutas base
-//consiste en definir las rutas base para la API local y remota
-//en este caso, la ruta local es '/12.back.ev3/api' y la ruta remota es 'https://www.clinicatecnologica.cl/ipss/tejelanasVivi/api/v1'
 $localBase = '/12.back.ev3/api';
 $remoteBase = 'https://www.clinicatecnologica.cl/ipss/tejelanasVivi/api/v1';
 
 // Obtener la ruta solicitada
-//en este caso, se obtiene la ruta solicitada desde la variable $_SERVER['REQUEST_URI']
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Fix para Authorization en Apache bajo Windows
-//consiste en verificar si la cabecera HTTP_AUTHORIZATION está definida
 if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
     if (isset($_SERVER['Authorization'])) {
         $_SERVER['HTTP_AUTHORIZATION'] = $_SERVER['Authorization'];
@@ -36,7 +31,6 @@ if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
 }
 
 // Verificar si la ruta comienza con la base local
-//inicia con la verificación de si la ruta solicitada comienza con la ruta base local
 if (strpos($path, $localBase) === 0) {
     $subroute = ltrim(substr($path, strlen($localBase)), '/');
     $externalUrl = rtrim($remoteBase, '/') . ($subroute ? '/' . $subroute : '');
